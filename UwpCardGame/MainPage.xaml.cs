@@ -38,12 +38,22 @@ namespace UwpCardGame
         {
             this.InitializeComponent();
         }
-
+        
+        /// <summary>
+        /// As soon as the page is loaded, the deck list is filled.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnPageLoaded(object sender, RoutedEventArgs e)
         {
             MakeADeck();
         }
 
+        /// <summary>
+        /// Event handler for the switch button. swaps the two card strings with each other. Also disables itself.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SwitchOnClick(object sender, RoutedEventArgs e)
         {
             string temp = pCard;
@@ -52,6 +62,13 @@ namespace UwpCardGame
             BSwitchCards.IsEnabled = false;
         }
 
+        /// <summary>
+        /// Event handler for the play button. increments roundsPlayed by 1, replaces the card back image with card representations.
+        /// After parsing the values from the cards it compares the values and increments the winning team or announces a tie by creating a suitable string.
+        /// At the end it prepares for another round unless the game is over, in which case it would show the restart button and announce the winner.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PlayOnClick(object sender, RoutedEventArgs e)
         {
 
@@ -102,6 +119,11 @@ namespace UwpCardGame
 
         }
 
+        /// <summary>
+        /// Event handler for the deal button. sets the images to card backs and picks two cards. enables switch and play while disabling itself.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DealOnClick(object sender, RoutedEventArgs e)
         {
             ImgHouseCard.Source = ImgPlayerCard.Source = new BitmapImage(new Uri(createPath("CardBack")));
@@ -113,18 +135,11 @@ namespace UwpCardGame
             BDealCards.IsEnabled = false;
         }
 
-        private void MakeADeck()
-        {
-            Deck.Clear();
-            for(int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j< 13; j++)
-                {
-                    Deck.Add(String.Format("{0}{1}", suits[i].Substring(0, 1), (j + 1).ToString().PadLeft(2, '0')));
-                }
-            }
-        }
-
+        /// <summary>
+        /// Event handler for the restart button. Sets itself invisible and sets everything to zero, while resetting the deck and enabling the deal button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RestartOnClick(object sender, RoutedEventArgs e)
         {
             Restart.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
@@ -138,6 +153,12 @@ namespace UwpCardGame
 
         }
 
+        /// <summary>
+        /// Using RNG it picks a number from the deck's indexes, removes it from the deck, and passes it.
+        /// </summary>
+        /// <returns>
+        /// a card in string format. e.g: "d03".
+        /// </returns>
         private string PickACard()
         {
             Random rand = new Random();
@@ -147,11 +168,29 @@ namespace UwpCardGame
             return cardPicked;
         }
 
+        /// <summary>
+        /// given a string it creates a path.
+        /// </summary>
+        /// <param name="card">
+        /// card string. e.g: "d03".
+        /// </param>
+        /// <returns>
+        /// the Uri for the card images.
+        /// </returns>
         private static string createPath(string card)
         {
             return String.Format("ms-appx:///Assets/CardImages/{0}.png", card);
         }
 
+        /// <summary>
+        /// given a char it uses a switch-case to return the appropriate suit string from the suits array.
+        /// </summary>
+        /// <param name="house">
+        /// initial character for house.
+        /// </param>
+        /// <returns>
+        /// house name
+        /// </returns>
         private string FindHouseFromChar(char house)
         {
             switch (house)
@@ -164,6 +203,21 @@ namespace UwpCardGame
                     return suits[2];
                 default:
                     return suits[3];
+            }
+        }
+
+        /// <summary>
+        /// clears the deck list initially and fills it.
+        /// </summary>
+        private void MakeADeck()
+        {
+            Deck.Clear();
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 13; j++)
+                {
+                    Deck.Add(String.Format("{0}{1}", suits[i].Substring(0, 1), (j + 1).ToString().PadLeft(2, '0')));
+                }
             }
         }
     }
